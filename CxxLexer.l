@@ -1,5 +1,18 @@
+/*
+ *	  Title:			Miniature lexer for C++ parser.
+ *
+ *	  File Name:		CxxLexer.l
+ *
+ *	  Author:			E.D.Willink
+ *
+ *	This is a complete lexer for C++, intended for use with CxxParser.y.
+ *	All actions are done by macros, so that there is some chance that customisation
+ *	can be performed within the bounds of the CxxLexing.hxx and CxxLexing.cxx
+ *	include files.
+ *END
+ */
 %{
-#include <CxxLexing.hxx>
+#include "CxxLexing.hxx"
 %}
 %a 5000
 %e 1500
@@ -144,4 +157,15 @@ pp_number						(\.?{digit}({digit}|{non_digit}|[eE][-+]|\.)*)
 .								{ LEX_ASCII_TOKEN(yytext[0]); }
 
 %%
-#include <CxxLexing.cxx>
+#include "CxxLexing.cxx"
+
+int yywrap(){}
+int main(int argc, char **argv) {
+  ++argv, --argc;
+  if (argc > 0) 
+    yyin = fopen(argv[1], "r");
+  else
+    yyin = stdin;
+  yylex();
+  return 0;
+}
